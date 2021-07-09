@@ -73,6 +73,12 @@ void fib_heap<T, Compare>::consolidate() {
     }
     top = nullptr;
 
-    
+    for(size_t i = 0; i <= max_degree) {
+        if (a[i] != nullptr) {
+            rootlist.insert(a[i]);
+            if(top == nullptr || a[i]->key < top->key)
+                top = a[i];
+        }
+    }
 
 }
