@@ -9,5 +9,5 @@
 run: main
 	./main
 
-main: main.cpp
+main: main.cpp fib_heap.h fib_heap.cpp
 	g++ main.cpp -std=c++11 -g -o main

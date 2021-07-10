@@ -5,9 +5,13 @@ using namespace std;
 int main() {
     fib_heap<int> h;
     map<int, fib_heap<int>::node*> m;
-    for(size_t i = 10; i >=0; i--) {
+    for(int i = 100; i >=0; i--) {
         m[i] = h.push(i);
     }
-    cout<<h.peek();
+    cout<<h.peek()<<endl;
+
+    h.decrease_key(m[100], -1);
+    cout<<h.peek()<<endl;
+
     return 0;
 }

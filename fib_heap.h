@@ -22,8 +22,8 @@ class fib_heap {
         T pop();
         T peek() const;
 
-        void decrease_key(node* n);
-        void delete_node(node* n);
+        void decrease_key(node* n, const T new_key);
+        void delete_node(node* n, const T min_value_of_type);
 
     private:
         size_t size;
@@ -32,6 +32,8 @@ class fib_heap {
         Compare higher_priority;
 
         void consolidate();
+        void cut(node* to_remove, node* parent);
+        void cascading_cut(node* n);
 
 };
 

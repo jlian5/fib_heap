@@ -1,5 +1,6 @@
 #include <cmath>
 #include <algorithm>
+#include <assert.h>
 
 template <class T, class Compare>
 fib_heap<T,Compare>::fib_heap() {
@@ -45,27 +46,53 @@ T fib_heap<T, Compare>::pop() {
             consolidate();
         }
         size--;
+        return z->key;
     }
 
-    return z->key;
+    return T();
+    
 }
 
 template <class T, class Compare>
-void fib_heap<T, Compare>::consolidate() {
-    size_t max_degree = (size_t)(log(size) / log(1.62));
-    std::vector<node*> a = std::vector<node*>(max_degree + 1, nullptr);
+void fib_heap<T,Compare>::decrease_key(node* n, const T new_key){
+    assert(higher_priority(new_key, n->key));
 
-    for(node* root : rootlist) {
-        node* x = root;
+    n->key = new_key;
+    node* y = n->parent;
+
+    if(y != nullptr && higher_priority(n->key, y->key)) {
+        cut(n,y);
+        cascading_cut(y);
+    }
+
+    if(higher_priority(n->key, top->key))
+        top = n;
+}
+
+template <class T, class Compare>
+void fib_heap<T,Compare>::delete_node(node* n, const T min_value_of_type){
+    decrease_key(n, min_value_of_type);
+    pop();
+}
+
+template <class T, class Compare>
+void fib_heap<T, Compare>::consolidate()
+{
+    size_t max_degree = (size_t)(log(size) / log(1.62));
+    std::vector<node *> a = std::vector<node *>(max_degree + 1, nullptr);
+
+    for (node *root : rootlist)
+    {
+        node *x = root;
         size_t d = x->degree;
 
-        while(a[d] != nullptr) {
-            node* y = a[d];
-            if(higher_priority(y->key, x->key))
-                std::swap(x,y);
+        while (a[d] != nullptr)
+        {
+            node *y = a[d];
+            if (higher_priority(y->key, x->key))
+                std::swap(x, y);
 
-
-            rootlist.erase(y);
+            // rootlist.erase(y);
             x->child_list.insert(y);
             y->parent = x;
             x->degree++;
@@ -76,23 +103,35 @@ void fib_heap<T, Compare>::consolidate() {
         a[d] = x;
     }
     top = nullptr;
-
-    for(size_t i = 0; i <= max_degree; i++) {
-        if (a[i] != nullptr) {
+    rootlist.clear();
+    for (size_t i = 0; i <= max_degree; i++)
+    {
+        if (a[i] != nullptr)
+        {
             rootlist.insert(a[i]);
-            if(top == nullptr || a[i]->key < top->key)
+            if (top == nullptr || a[i]->key < top->key)
                 top = a[i];
         }
     }
-
 }
 
 template <class T, class Compare>
-void fib_heap<T,Compare>::decrease_key(node* n){
-    
+void fib_heap<T, Compare>::cut(node *to_remove, node *parent) {
+    parent->child_list.erase(to_remove);
+    rootlist.insert(to_remove);
+    to_remove->parent = nullptr;
+    to_remove->mark = false;
 }
 
 template <class T, class Compare>
-void fib_heap<T,Compare>::delete_node(node* n){
-
+void fib_heap<T, Compare>::cascading_cut(node *n) {
+    node* z = n->parent;
+    if(z != nullptr) {
+        if(n->mark) {
+            cut(n, z);
+            cascading_cut(z);
+        }else {
+            n->mark = true;
+        }
+    }
 }
