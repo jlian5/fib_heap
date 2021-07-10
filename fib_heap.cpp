@@ -1,4 +1,3 @@
-#include "fib_heap.hpp"
 #include <cmath>
 #include <algorithm>
 
@@ -18,11 +17,16 @@ typename fib_heap<T, Compare>::node* fib_heap<T, Compare>::push(const T elem) {
     rootlist.insert(x);
 
     if(top == nullptr || higher_priority(elem, top->key)) {
-        top = elem;
+        top = x;
     }
 
     size++;
     return x;
+}
+
+template <class T, class Compare>
+T fib_heap<T, Compare>::peek() const{
+    return top->key;
 }
 
 template <class T, class Compare>
@@ -73,12 +77,22 @@ void fib_heap<T, Compare>::consolidate() {
     }
     top = nullptr;
 
-    for(size_t i = 0; i <= max_degree) {
+    for(size_t i = 0; i <= max_degree; i++) {
         if (a[i] != nullptr) {
             rootlist.insert(a[i]);
             if(top == nullptr || a[i]->key < top->key)
                 top = a[i];
         }
     }
+
+}
+
+template <class T, class Compare>
+void fib_heap<T,Compare>::decrease_key(node* n){
+    
+}
+
+template <class T, class Compare>
+void fib_heap<T,Compare>::delete_node(node* n){
 
 }
