@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <functional>
 
-template <class T, class Compare = std::less<T>>
+template <class T, class Compare = std::less<T> >
 class fib_heap {
     public:
         class node{
@@ -34,3 +34,5 @@ class fib_heap {
         void consolidate();
 
 };
+
+#include "fib_heap.cpp"
