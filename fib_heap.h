@@ -10,7 +10,7 @@ class fib_heap {
         class node{
             public:
                 node *parent;
-                std::unordered_multiset<node *> child_list;
+                std::unordered_set<node *> child_list;
 
                 T key;
                 size_t degree;
@@ -28,7 +28,7 @@ class fib_heap {
     private:
         size_t size;
         node* top;
-        std::unordered_multiset<node*> rootlist;
+        std::unordered_set<node*> rootlist;
         Compare higher_priority;
 
         void consolidate();
